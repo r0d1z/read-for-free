@@ -1,0 +1,44 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/mock/downloads/.*",
+        "queryParameters": {
+          "fail": {
+            "equalTo": "true"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "fixedDelayMilliseconds": 150,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "Storage node stream severed (Chaos Sim)"
+        }
+      }
+    },
+    {
+      "priority": 5,
+      "request": {
+        "method": "GET",
+        "urlPathPattern": "/mock/downloads/.*"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "text/plain; charset=utf-8"
+        },
+        "bodyFileName": "sample-public-domain-book.txt",
+        "chunkedDribbleDelay": {
+          "numberOfChunks": 5,
+          "totalDuration": 1200
+        }
+      }
+    }
+  ]
+}

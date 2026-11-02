@@ -1,0 +1,58 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/gutendex/search",
+        "queryParameters": {
+          "fail": {
+            "equalTo": "true"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "fixedDelayMilliseconds": 150,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "Gutendex service temporarily unavailable (Chaos Sim)"
+        }
+      }
+    },
+    {
+      "priority": 5,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/gutendex/search"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 400,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "books": [
+            {
+              "id": "mock-gt-84",
+              "title": "Frankenstein or The Modern Prometheus",
+              "authors": ["Shelley, Mary Wollstonecraft"],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/frankenstein.txt"
+            },
+            {
+              "id": "mock-gt-1342",
+              "title": "Pride and Prejudice",
+              "authors": ["Austen, Jane"],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/pride_and_prejudice.txt"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

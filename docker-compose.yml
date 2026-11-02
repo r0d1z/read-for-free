@@ -1,0 +1,74 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: rff-otel-collector
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./observability/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+    ports:
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+    depends_on:
+      - mimir
+      - tempo
+    networks:
+      - rff-net
+
+  mimir:
+    image: grafana/mimir:latest
+    container_name: rff-mimir
+    command: ["-config.file=/etc/mimir/mimir.yaml"]
+    volumes:
+      - ./observability/mimir.yaml:/etc/mimir/mimir.yaml:ro
+    ports:
+      - "9009:8080"
+    networks:
+      - rff-net
+
+  tempo:
+    image: grafana/tempo:latest
+    container_name: rff-tempo
+    command: ["-config.file=/etc/tempo.yaml"]
+    volumes:
+      - ./observability/tempo.yaml:/etc/tempo.yaml:ro
+    ports:
+      - "3200:3200"
+    networks:
+      - rff-net
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: rff-grafana
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mimir
+      - tempo
+    networks:
+      - rff-net
+
+  wiremock:
+    image: wiremock/wiremock:latest
+    container_name: rff-wiremock
+    command:
+      - "--async-response-enabled=true"
+      - "--async-response-threads=100"
+      - "--no-request-journal"
+    volumes:
+      - ./observability/wiremock:/home/wiremock:ro
+    ports:
+      - "8089:8080"
+    networks:
+      - rff-net
+
+networks:
+  rff-net:
+    driver: bridge

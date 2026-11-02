@@ -1,0 +1,58 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/archive/search",
+        "queryParameters": {
+          "fail": {
+            "equalTo": "true"
+          }
+        }
+      },
+      "response": {
+        "status": 503,
+        "fixedDelayMilliseconds": 150,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "Internet Archive search cluster node unavailable (Chaos Sim)"
+        }
+      }
+    },
+    {
+      "priority": 5,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/archive/search"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 850,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "books": [
+            {
+              "id": "mock-ia-sherlock",
+              "title": "The Adventures of Sherlock Holmes",
+              "authors": ["Doyle, Arthur Conan"],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/sherlock.txt"
+            },
+            {
+              "id": "mock-ia-alice",
+              "title": "Alice's Adventures in Wonderland",
+              "authors": ["Carroll, Lewis"],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/alice.txt"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

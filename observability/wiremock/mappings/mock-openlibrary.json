@@ -1,0 +1,58 @@
+{
+  "mappings": [
+    {
+      "priority": 1,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/openlibrary/search",
+        "queryParameters": {
+          "fail": {
+            "equalTo": "true"
+          }
+        }
+      },
+      "response": {
+        "status": 500,
+        "fixedDelayMilliseconds": 150,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "error": "OpenLibrary upstream internal error (Chaos Sim)"
+        }
+      }
+    },
+    {
+      "priority": 5,
+      "request": {
+        "method": "GET",
+        "urlPath": "/mock/openlibrary/search"
+      },
+      "response": {
+        "status": 200,
+        "fixedDelayMilliseconds": 650,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "jsonBody": {
+          "books": [
+            {
+              "id": "mock-ol-works-1",
+              "title": "Dracula",
+              "authors": ["Stoker, Bram"],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/dracula.txt"
+            },
+            {
+              "id": "mock-ol-works-2",
+              "title": "The Time Machine",
+              "authors": ["Wells, H. G."],
+              "format": "txt",
+              "downloadUrl": "/mock/downloads/the_time_machine.txt"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
